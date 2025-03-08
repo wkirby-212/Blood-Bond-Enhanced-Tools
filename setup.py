@@ -15,28 +15,26 @@ except FileNotFoundError:
     long_description = "Blood Bond Enhanced Tools - A Python implementation of tools for the Blood Bond TTRPG system"
 
 # Get list of data files
-def package_files(directory):
+def package_files(directory, base_path=None):
     paths = []
+    if not os.path.exists(directory):
+        return paths
+        
     for (path, directories, filenames) in os.walk(directory):
         for filename in filenames:
             # Include all data files, not just JSON
             if any(filename.endswith(ext) for ext in ['.json', '.txt', '.csv', '.yaml', '.yml']):
-                # Adjust path for proper inclusion in the package
-                rel_path = os.path.relpath(os.path.join(path, filename), 'bloodbond')
-                paths.append(os.path.join('..', rel_path))
+                if base_path:
+                    # Get path relative to the specified base path
+                    rel_path = os.path.relpath(os.path.join(path, filename), base_path)
+                    paths.append(rel_path)
+                else:
+                    # Use the whole path if no base path specified
+                    paths.append(os.path.join(path, filename))
     return paths
 
-# Include bloodbond data files
-bloodbond_data_files = package_files('bloodbond/data')
-
-# Include root data directory files
-root_data_files = []
-if os.path.exists('data'):
-    for (path, directories, filenames) in os.walk('data'):
-        for filename in filenames:
-            if any(filename.endswith(ext) for ext in ['.json', '.txt', '.csv', '.yaml', '.yml']):
-                # Store path relative to package root
-                root_data_files.append(os.path.join('..', '..', path, filename))
+# Include bloodbond data files - these are internal to the package
+bloodbond_data_files = package_files('bloodbond/data', 'bloodbond')
 
 setup(
     name="bloodbond-enhanced-tools",
@@ -49,24 +47,34 @@ setup(
     url="https://github.com/bloodbond/enhanced-tools",
     packages=find_packages(),
     package_data={
-        'bloodbond': bloodbond_data_files + root_data_files,
+        'bloodbond': bloodbond_data_files,
     },
+    data_files=[
+        ('data', package_files('data')),
+    ],
     include_package_data=True,
     install_requires=[
-        'customtkinter>=5.2.0',
-        'pillow>=10.0.0',
-        'pandas>=2.0.3',
-        'pyyaml>=6.0.1',
-        'jsonschema>=4.19.0',
-        'rapidfuzz>=3.2.0',
-        'nltk>=3.8.1',
-        'tqdm>=4.66.1',
-        'colorama>=0.4.6',
-        'python-dotenv>=1.0.0',
+        'customtkinter==5.2.0',
+        'pillow==10.0.0',
+        'pandas==2.0.3',
+        'pyyaml==6.0.1',
+        'jsonschema==4.19.0',
+        'rapidfuzz==3.2.0',
+        'nltk==3.8.1',
+        'tqdm==4.66.1',
+        'colorama==0.4.6',
+        'python-dotenv==1.0.0',
         'ttkthemes',
         'pyperclip',
         'rich',
     ],
+    extras_require={
+        'dev': [
+            'pytest==7.4.0',
+            'black==23.7.0',
+            'mypy==1.5.1',
+        ],
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",

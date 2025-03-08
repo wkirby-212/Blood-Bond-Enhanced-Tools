@@ -1,23 +1,14 @@
-# Include all JSON data files
-recursive-include data *.json
-
-# Include any text files that might be needed
-recursive-include data *.txt
-
-# Include any other data files that might be necessary
-recursive-include data *.*
-
-# Include documentation
-include *.md
+# Include documentation and licensing
 include LICENSE
+include README.md
+include CHANGELOG.md
 
 # Include package metadata
 include requirements.txt
 include setup.py
 
 # Include bloodbond data files
-recursive-include bloodbond/data *.*
+recursive-include bloodbond/data *.json
 
 # Include any additional package resources
 recursive-include bloodbond *.py
-

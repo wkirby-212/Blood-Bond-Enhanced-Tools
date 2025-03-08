@@ -2,7 +2,7 @@
 Blood Bond Enhanced Tools - A Python package for creating and managing spells for the Blood Bond TTRPG.
 """
 
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 __author__ = 'Blood Bond Enhanced Tools Team'
 
 # Import main classes for direct access
