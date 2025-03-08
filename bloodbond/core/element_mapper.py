@@ -15,7 +15,7 @@ Classes:
 import os
 import json
 import logging
-from typing import Dict, List, Tuple, Optional, Union, Any
+from typing import Dict, List, Tuple, Optional, Union, Any, Set
 import difflib
 
 # Optional import for better performance
@@ -44,10 +44,10 @@ class ElementMapper:
         
     Examples:
         >>> mapper = ElementMapper()
-        >>> mapper.map_element("Wind")
-        'Air'
-        >>> mapper.map_element("Darkness")
-        'Shadow'
+        >>> mapper.map_element("Water")
+        'Water'
+        >>> mapper.map_element("Moon")
+        'Moon'
         >>> mapper.find_closest_match("Firey", ["Fire", "Water", "Earth"])
         ('Fire', 0.8)
     """
@@ -57,50 +57,43 @@ class ElementMapper:
                  source_elements: Optional[List[str]] = None,
                  target_elements: Optional[List[str]] = None,
                  similarity_threshold: float = 0.7,
-                 use_rapidfuzz: bool = RAPIDFUZZ_AVAILABLE):
+                 use_rapidfuzz: bool = RAPIDFUZZ_AVAILABLE,
+                 compatibility_file_path: Optional[str] = None):
         """
         Initialize the ElementMapper with direct mappings and element lists.
         
         Args:
             direct_mappings: Dictionary mapping source elements to target elements.
-                             If None, default mappings will be used.
-            source_elements: List of valid source elements. If None, defaults will be used.
-            target_elements: List of valid target elements. If None, defaults will be used.
+                             If None, only standardized elements will be used.
+            source_elements: List of valid source elements. If None, standardized elements will be used.
+            target_elements: List of valid target elements. If None, standardized elements will be used.
             similarity_threshold: Minimum similarity score (0.0-1.0) for a match.
             use_rapidfuzz: Whether to use the rapidfuzz library for similarity matching.
                            Defaults to True if the library is available.
+            compatibility_file_path: Path to the Standardized_Compatibility.json file.
+                                     If None, a default path will be used.
         """
         self.logger = logging.getLogger(__name__)
         
-        # Default direct mappings if none provided
-        self.direct_mappings = direct_mappings or {
-            "Wind": "Air",
-            "Moon": "Light",
-            "Sun": "Fire",
-            "Spirit": "Arcane",
-            "Nature": "Earth",
-            "Mind": "Psychic",
-            "Ice": "Water",
-            "Shadow": "Darkness"
-        }
+        # Load standardized elements from compatibility file
+        self.standardized_elements = self._load_standardized_elements(compatibility_file_path)
+        self.logger.debug(f"Loaded {len(self.standardized_elements)} standardized elements")
         
-        # Initialize source and target elements
-        self.source_elements = source_elements or list(self.direct_mappings.keys())
-        self.target_elements = target_elements or list(self.direct_mappings.values())
+        # Use only standardized elements for mappings
+        self.direct_mappings = {}
         
-        # Add any missing elements to both lists to ensure bi-directional mapping
-        for element in self.direct_mappings.values():
-            if element not in self.source_elements:
-                self.source_elements.append(element)
-                
-        for element in self.direct_mappings.keys():
-            if element not in self.target_elements:
-                self.target_elements.append(element)
+        # Initialize source and target elements with standardized elements
+        self.source_elements = source_elements or list(self.standardized_elements)
+        self.target_elements = target_elements or list(self.standardized_elements)
+        
+        # Ensure both source and target elements contain only standardized elements
+        self.source_elements = [element for element in self.source_elements if element in self.standardized_elements]
+        self.target_elements = [element for element in self.target_elements if element in self.standardized_elements]
         
         self.similarity_threshold = similarity_threshold
         self.use_rapidfuzz = use_rapidfuzz and RAPIDFUZZ_AVAILABLE
         
-        self.logger.debug(f"ElementMapper initialized with {len(self.direct_mappings)} direct mappings")
+        self.logger.debug(f"ElementMapper initialized with standardized elements: {', '.join(self.standardized_elements)}")
         self.logger.debug(f"Using RapidFuzz: {self.use_rapidfuzz}")
     
     def map_element(self, element: str) -> str:
@@ -118,8 +111,8 @@ class ElementMapper:
             
         Examples:
             >>> mapper = ElementMapper()
-            >>> mapper.map_element("Wind")
-            'Air'
+            >>> mapper.map_element("Water")
+            'Water'
         """
         # Try direct mapping first
         if element in self.direct_mappings:
@@ -142,7 +135,13 @@ class ElementMapper:
             return closest_match
         
         # If no good match is found, return the original element
-        self.logger.warning(f"No suitable mapping found for '{element}'. Using as-is.")
+        # If no good match is found, log a warning and return a default element if it's not in standardized elements
+        if element not in self.standardized_elements:
+            default_element = next(iter(self.standardized_elements), element)
+            self.logger.warning(f"No suitable mapping found for '{element}'. It's not a standardized element. Using '{default_element}' instead.")
+            return default_element
+        
+        # If it's already a standardized element, return it as-is
         return element
     
     def find_closest_match(self, query: str, candidates: List[str]) -> Tuple[str, float]:
@@ -186,23 +185,33 @@ class ElementMapper:
         
         self.logger.debug(f"Closest match for '{query}': '{best_match}' (score: {score:.2f})")
         return best_match, score
-    
     def add_mapping(self, source: str, target: str) -> None:
         """
         Add a new direct mapping between elements.
+        Only adds mapping if both elements are standardized elements.
         
         Args:
             source: The source element name.
             target: The target element name.
         """
-        self.direct_mappings[source] = target
-        
-        # Ensure both elements are in the source and target lists
-        if source not in self.source_elements:
-            self.source_elements.append(source)
-        if target not in self.target_elements:
-            self.target_elements.append(target)
+        # Only add mapping if both elements are standardized
+        if source in self.standardized_elements and target in self.standardized_elements:
+            self.direct_mappings[source] = target
             
+            # Ensure both elements are in the source and target lists
+            if source not in self.source_elements:
+                self.source_elements.append(source)
+            if target not in self.target_elements:
+                self.target_elements.append(target)
+                
+            self.logger.debug(f"Added mapping: {source} -> {target}")
+        else:
+            non_standard = []
+            if source not in self.standardized_elements:
+                non_standard.append(source)
+            if target not in self.standardized_elements:
+                non_standard.append(target)
+            self.logger.warning(f"Cannot add mapping with non-standardized elements: {', '.join(non_standard)}")
         self.logger.debug(f"Added mapping: {source} -> {target}")
     
     def remove_mapping(self, source: str) -> bool:
@@ -245,8 +254,8 @@ class ElementMapper:
         The JSON file should have a format like:
         {
             "element_mappings": {
-                "Wind": "Air",
-                "Moon": "Light",
+                "Moon": "Sun",
+                "Water": "Earth",
                 ...
             }
         }
@@ -262,12 +271,20 @@ class ElementMapper:
             if "element_mappings" not in data:
                 self.logger.error(f"Invalid mapping file format: {filepath}")
                 return False
-                
-            self.direct_mappings = data["element_mappings"]
             
-            # Update source and target elements
-            self.source_elements = list(self.direct_mappings.keys())
-            self.target_elements = list(self.direct_mappings.values())
+            # Filter out any non-standardized elements from mappings
+            filtered_mappings = {}
+            for source, target in data["element_mappings"].items():
+                if source in self.standardized_elements and target in self.standardized_elements:
+                    filtered_mappings[source] = target
+                else:
+                    self.logger.warning(f"Skipping non-standard element mapping: {source} -> {target}")
+            
+            self.direct_mappings = filtered_mappings
+            
+            # Update source and target elements (ensuring they remain standardized)
+            self.source_elements = [elem for elem in list(self.direct_mappings.keys()) if elem in self.standardized_elements]
+            self.target_elements = [elem for elem in list(self.direct_mappings.values()) if elem in self.standardized_elements]
             
             self.logger.info(f"Loaded {len(self.direct_mappings)} mappings from {filepath}")
             return True
@@ -309,26 +326,102 @@ class ElementMapper:
         """
         return {element: self.map_element(element) for element in elements}
 
+    def _load_standardized_elements(self, filepath: Optional[str] = None) -> Set[str]:
+        """
+        Load standardized elements from the compatibility file.
+        
+        Args:
+            filepath: Path to the Standardized_Compatibility.json file.
+                      If None, will try to find the file in default locations.
+                      
+        Returns:
+            Set of standardized element names.
+        """
+        standard_elements = set()
+        
+        # Default paths to check if filepath is not provided
+        default_paths = [
+            os.path.join("data", "Standardized_Compatibility.json"),
+            os.path.join("..", "data", "Standardized_Compatibility.json"),
+            os.path.join(os.path.dirname(__file__), "..", "data", "Standardized_Compatibility.json")
+        ]
+        
+        paths_to_try = [filepath] if filepath else default_paths
+        
+        for path in paths_to_try:
+            if path and os.path.exists(path):
+                try:
+                    with open(path, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                    
+                    # Extract elements from the "Blood line" section
+                    if "Blood line" in data:
+                        # Add each bloodline (key in the "Blood line" section) as a standardized element
+                        standard_elements.update(data["Blood line"].keys())
+                        
+                        # Also add any elements that appear in compatibility lists
+                        for bloodline_data in data["Blood line"].values():
+                            for compatibility_list in bloodline_data.values():
+                                if isinstance(compatibility_list, list):
+                                    # Add all elements except "All" which is a special keyword
+                                    standard_elements.update([e for e in compatibility_list if e != "All"])
+                    
+                    self.logger.info(f"Loaded standardized elements from: {path}")
+                    break  # Stop after finding the first valid file
+                    
+                except Exception as e:
+                    self.logger.error(f"Error loading standardized elements from {path}: {str(e)}")
+                    continue
+        
+        # If no elements were loaded, use a hardcoded list of standard elements
+        if not standard_elements:
+            self.logger.warning("Using hardcoded standardized elements as fallback")
+            standard_elements = {"Moon", "Water", "Wind", "Earth", "Death", "Fire", "Protection", "Love", "Song", "Sun"}
+        
+        return standard_elements
 
-# Example usage
+
+# Example usage of ElementMapper
 if __name__ == "__main__":
-    # Configure logging
-    logging.basicConfig(level=logging.DEBUG)
+    # Set up logging to see the debug messages
+    logging.basicConfig(level=logging.DEBUG, 
+                       format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     
-    # Create mapper
+    # Create an instance of ElementMapper
     mapper = ElementMapper()
     
-    # Direct mapping example
-    print(f"Mapping 'Wind': {mapper.map_element('Wind')}")
+    print("ElementMapper Example:")
+    print("-" * 30)
     
-    # Similarity mapping example
-    print(f"Mapping 'Firey': {mapper.map_element('Firey')}")
+    # Standard elements that should be recognized
+    standard_elements = ["Moon", "Water", "Wind", "Earth", "Death", "Fire", "Protection", "Love", "Song", "Sun"]
     
-    # Add new mapping
-    mapper.add_mapping("Cosmic", "Astral")
-    print(f"Mapping 'Cosmic': {mapper.map_element('Cosmic')}")
+    # Map each standard element
+    print("Mapping standard elements:")
+    for element in standard_elements:
+        mapped = mapper.map_element(element)
+        print(f"  {element} -> {mapped}")
     
-    # Batch mapping
-    elements = ["Wind", "Sun", "Unknown", "Cosmic"]
-    print(f"Batch mapping: {mapper.batch_map_elements(elements)}")
+    # Create custom mappings between standard elements
+    print("\nAdding custom mappings between standard elements:")
+    mapper.add_mapping("Water", "Moon")
+    mapper.add_mapping("Fire", "Sun")
+    
+    # Show the results of custom mappings
+    print("Results after adding custom mappings:")
+    print(f"  Water -> {mapper.map_element('Water')}")
+    print(f"  Fire -> {mapper.map_element('Fire')}")
+    
+    # Show how batch mapping works
+    print("\nBatch mapping multiple elements:")
+    elements_to_map = ["Water", "Fire", "Earth", "Wind", "Sun"]
+    mapped_results = mapper.batch_map_elements(elements_to_map)
+    for source, target in mapped_results.items():
+        print(f"  {source} -> {target}")
+    
+    # Get all current mappings
+    print("\nAll current mappings:")
+    all_mappings = mapper.get_all_mappings()
+    for source, target in all_mappings.items():
+        print(f"  {source} -> {target}")
 

@@ -13,6 +13,7 @@ from pathlib import Path
 
 from bloodbond.core.data_loader import DataLoader
 from bloodbond.core.element_mapper import ElementMapper
+from bloodbond.core.spell_calculator import SpellCalculator
 from bloodbond.core.exceptions import (
     SpellError, InvalidParameterError, IncompatibleElementsError,
     SpellValidationError, SpellLimitError, DataError
@@ -35,13 +36,15 @@ class SpellMaker:
     """
     
     def __init__(self, data_loader: Optional[DataLoader] = None, 
-                 element_mapper: Optional[ElementMapper] = None):
+                 element_mapper: Optional[ElementMapper] = None,
+                 spell_calculator: Optional[SpellCalculator] = None):
         """
         Initialize the SpellMaker with necessary components.
         
         Args:
             data_loader: Optional custom DataLoader instance
             element_mapper: Optional custom ElementMapper instance
+            spell_calculator: Optional custom SpellCalculator instance
         """
         self.data_loader = data_loader or DataLoader()
         
@@ -51,6 +54,9 @@ class SpellMaker:
         else:
             # Use default ElementMapper initialization with no parameters
             self.element_mapper = ElementMapper()
+
+        # Initialize SpellCalculator
+        self.spell_calculator = spell_calculator or SpellCalculator()
             
         self.spoken_spell_table = self.data_loader.get_spoken_spell_table()
         self.cached_spells = {}
@@ -58,7 +64,9 @@ class SpellMaker:
     def create_spell(self, effect: str, element: str, 
                      duration: str = "instant", 
                      range_value: str = "self", 
-                     level: int = 1) -> Dict[str, Any]:
+                     level: int = 1,
+                     bloodline: str = None,
+                     magical_affinity: int = 0) -> Dict[str, Any]:
         """
         Create a new spell with the specified parameters.
         
@@ -68,6 +76,8 @@ class SpellMaker:
             duration: The duration of the spell (default: "instant")
             range_value: The range of the spell (default: "self")
             level: The power level of the spell (default: 1)
+            bloodline: The caster's bloodline element (default: None)
+            magical_affinity: The caster's magical affinity (default: 0)
             
         Returns:
             A dictionary containing the complete spell details including
@@ -81,7 +91,7 @@ class SpellMaker:
             DataError: If required data cannot be loaded or is malformed
         """
         # Generate cache key for this spell combination
-        cache_key = f"{effect}|{element}|{duration}|{range_value}|{level}"
+        cache_key = f"{effect}|{element}|{duration}|{range_value}|{level}|{bloodline}|{magical_affinity}"
         
         # Return cached spell if available
         if cache_key in self.cached_spells:
@@ -99,6 +109,12 @@ class SpellMaker:
         # Generate spell components
         incantation = self._generate_incantation(effect, mapped_element, duration, range_value, level)
         description = self._generate_description(effect, mapped_element, duration, range_value, level)
+        # Calculate spell effectiveness if bloodline is provided
+        effectiveness_data = None
+        if bloodline:
+            effectiveness_data = self.calculate_spell_effectiveness(
+                bloodline, mapped_element, level, magical_affinity
+            )
         
         # Create spell object
         spell = {
@@ -109,8 +125,14 @@ class SpellMaker:
             "range": range_value,
             "level": level,
             "incantation": incantation,
-            "description": description
+            "description": description,
+            "bloodline": bloodline,
+            "magical_affinity": magical_affinity
         }
+        
+        # Add effectiveness data if available
+        if effectiveness_data:
+            spell["effectiveness"] = effectiveness_data
         
         # Cache the spell
         self.cached_spells[cache_key] = spell
@@ -145,6 +167,8 @@ class SpellMaker:
         duration = parameters.get("duration", "instant")
         range_value = parameters.get("range", "self")
         level = parameters.get("level", 1)
+        bloodline = parameters.get("bloodline")
+        magical_affinity = parameters.get("magical_affinity", 0)
         custom_modifiers = parameters.get("custom_modifiers", {})
         
         if not effect and not element:
@@ -161,7 +185,10 @@ class SpellMaker:
             )
         
         # Create the base spell
-        spell = self.create_spell(effect, element, duration, range_value, level)
+        spell = self.create_spell(
+            effect, element, duration, range_value, level, 
+            bloodline=bloodline, magical_affinity=magical_affinity
+        )
         
         # Apply any custom modifiers
         if custom_modifiers:
@@ -652,6 +679,10 @@ class SpellMaker:
             effect: The effect of the spell
             element: The element of the spell
         """
+        # Skip debug printing for Ice element
+        if element == 'Ice':
+            return
+            
         descriptions = self.data_loader.get_spell_descriptions()
         print(f'Effect: {effect}, Element: {element}')
         print(f'Descriptions structure: {type(descriptions)}')
@@ -751,4 +782,80 @@ class SpellMaker:
             matches.extend(contains_matches)
         
         # Return up to the limit number of matches
+        # Return up to the limit number of matches
         return matches[:limit]
+
+    def calculate_spell_effectiveness(self, bloodline: str, element: str, 
+                                    spell_level: int, magical_affinity: int = 0) -> Dict[str, Any]:
+        """
+        Calculate the effectiveness of a spell based on bloodline compatibility.
+        
+        Args:
+            bloodline: The caster's bloodline element
+            element: The element of the spell
+            spell_level: The base level of the spell
+            magical_affinity: The caster's magical affinity
+            
+        Returns:
+            Dictionary containing effectiveness data including:
+            - compatibility: The percentage compatibility between bloodline and spell element
+            - effective_level: The adjusted spell level based on compatibility
+            - formula: The spell formula in dice notation format (e.g., "5d10+8")
+            - affinity_bonus: The numerical bonus derived from affinity percentage
+            - descriptor: A text description of the effectiveness
+        """
+        # Simple caster object to pass to SpellCalculator methods
+        class SpellCaster:
+            def __init__(self, bloodline, magical_affinity):
+                self.bloodline = bloodline
+                self.magical_affinity = magical_affinity
+                self.preferred_elements = []
+                self.restricted_elements = []
+                # Default class die is d10 for mages
+                self.class_die = 10
+        
+        # Create a temporary caster object
+        caster = SpellCaster(bloodline, magical_affinity)
+        
+        # Get the exact compatibility percentage from the SpellCalculator
+        # This uses the authoritative values from Standardized_Compatibility.json
+        compatibility = self.spell_calculator.get_bloodline_compatibility(bloodline, element)
+        
+        # We no longer need to standardize compatibility since the SpellCalculator
+        # now loads the standardized values directly from the Standardized_Compatibility.json file
+        
+        # Calculate affinity bonus based on compatibility
+        # The formula uses compatibility / 10 as the affinity bonus (100% -> 10, 80% -> 8, etc.)
+        affinity_bonus = compatibility // 10
+        
+        # Calculate effective spell level
+        effective_level = self.spell_calculator.get_effective_spell_level(caster, element, spell_level)
+        
+        # Create the formula in dice notation: (level"d"'class die') + affinity_bonus
+        formula = f"{spell_level}d{caster.class_die}+{affinity_bonus}"
+        
+        # Generate descriptor based on the exact compatibility value
+        if compatibility == 100:
+            descriptor = "Perfect Harmony"
+        elif compatibility == 80:
+            descriptor = "Strong Affinity"
+        elif compatibility == 60:
+            descriptor = "Compatible"
+        elif compatibility == 50:
+            descriptor = "Sun's Balance"  # Special descriptor for Sun bloodline with other elements
+        elif compatibility == 40:
+            descriptor = "Moderate Resonance"
+        elif compatibility == 20:
+            descriptor = "Weak Connection"
+        else:
+            descriptor = "Elemental Rejection"
+        
+        # Return effectiveness data
+        return {
+            "compatibility": compatibility,
+            "effective_level": effective_level,
+            "level_adjustment": effective_level - spell_level,
+            "formula": formula,
+            "affinity_bonus": affinity_bonus,
+            "descriptor": descriptor
+        }

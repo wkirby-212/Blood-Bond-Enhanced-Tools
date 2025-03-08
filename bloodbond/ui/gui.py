@@ -331,6 +331,7 @@ class SpellCreatorApp:
         
         # Bloodline
         bloodline_label = label_class(left_column, text="Bloodline:")
+        bloodline_label = label_class(left_column, text="Bloodline:")
         bloodline_label.pack(anchor=tk.W, pady=(0, 5))
         
         if USE_CTK:
@@ -345,15 +346,6 @@ class SpellCreatorApp:
         
         # Display compatibility between bloodline and selected element
         self.compatibility_var = ctk.StringVar() if USE_CTK else tk.StringVar()
-        self.compatibility_var.set("Compatibility: N/A")
-        if USE_CTK:
-            # CustomTkinter properly supports textvariable
-            self.compatibility_label = label_class(left_column, textvariable=self.compatibility_var)
-        else:
-            # For standard tkinter, we'll use the text property and update it manually
-            self.compatibility_label = label_class(left_column, text="Compatibility: N/A")
-        self.compatibility_label.pack(anchor=tk.W, pady=(0, 10))
-        
         # Element
         element_label = label_class(left_column, text="Element:")
         element_label.pack(anchor=tk.W, pady=(0, 5))
@@ -864,9 +856,51 @@ class SpellCreatorApp:
                 if not USE_CTK and hasattr(self, 'compatibility_label'):
                     self.compatibility_label.configure(text="Compatibility: N/A")
                 return
-                
-            # Get compatibility percentage using the utility function
-            compatibility = self.data_loader.get_bloodline_element_compatibility(bloodline, element)
+            
+            # Get detailed compatibility info using SpellCalculator
+            # Create a simple caster object with bloodline for effective level calculation
+            class SimpleCaster:
+                def __init__(self, bloodline):
+                    self.bloodline = bloodline
+                    self.magical_affinity = 0
+                    self.preferred_elements = []
+                    self.restricted_elements = []
+                    self.class_die = 10  # Default class die for display purposes
+            
+            caster = SimpleCaster(bloodline)
+            power_level = self.tk_vars["power_level"].get()
+            
+            # Get the effective spell level (an integer)
+            effective_level = self.spell_maker.spell_calculator.get_effective_spell_level(
+                caster, element, power_level
+            )
+            # Get the compatibility percentage from SpellCalculator
+            # This loads exact values from Standardized_Compatibility.json
+            compatibility = self.spell_maker.spell_calculator.get_bloodline_compatibility(
+                bloodline, element
+            )
+            
+            # Calculate affinity bonus based on compatibility percentage
+            affinity_bonus = compatibility // 10
+            
+            # Get descriptor based on compatibility percentage from Standardized_Compatibility.json
+            if compatibility == 100:
+                descriptor = "Perfect Harmony"
+            elif compatibility == 80:
+                descriptor = "Strong Affinity"
+            elif compatibility == 60:
+                descriptor = "Compatible"
+            elif compatibility == 50:
+                descriptor = "Sun's Balance"
+            elif compatibility == 40:
+                descriptor = "Moderate Resonance"
+            elif compatibility == 20:
+                descriptor = "Weak Connection"
+            else:
+                descriptor = "Elemental Rejection"
+            
+            # Calculate level adjustment (difference between effective and base levels)
+            level_adjustment = effective_level - power_level
             
             # Calculate color (red to green gradient based on compatibility)
             r = min(255, int(255 * (1 - compatibility / 100)))
@@ -875,8 +909,10 @@ class SpellCreatorApp:
             color = f'#{r:02x}{g:02x}{b:02x}'
             
             # Update text and color based on widget type
-            compatibility_text = f"Compatibility: {compatibility:.0f}%"
-            
+            # Update text and color based on widget type
+            # Create the dice notation formula: "level'd'class_die + affinity_bonus"
+            dice_formula = f"{power_level}d{caster.class_die}+{affinity_bonus}"
+            compatibility_text = f"Compatibility: {compatibility}% - {descriptor} (Formula: {dice_formula})"
             # Set the compatibility variable for CustomTkinter
             self.compatibility_var.set(compatibility_text)
             
@@ -922,17 +958,16 @@ class SpellCreatorApp:
                 self._show_error("All fields are required")
                 return
             
-            # Create the spell
+            # Create the spell with bloodline information
             spell = self.spell_maker.create_spell(
                 effect=effect,
                 element=element,
                 duration=duration,
                 range_value=range_val,
-                level=power_level
+                level=power_level,
+                bloodline=bloodline,
+                magical_affinity=0  # Default value, can be enhanced with character progression
             )
-            
-            # Calculate compatibility for bloodline and element
-            compatibility = self.data_loader.get_bloodline_element_compatibility(bloodline, element)
             
             # Use original text as description if available and option is enabled
             if self.use_original_text and self.original_spell_text:
@@ -940,14 +975,70 @@ class SpellCreatorApp:
             else:
                 description = spell.get("description", "")
             
-            # Add compatibility info to description
-            compatibility_info = f"\n\nBloodline Compatibility: Your {bloodline} bloodline has {compatibility:.0f}% affinity with {element} magic."
-            description += compatibility_info
+            # Check if effectiveness data is available
+            effectiveness_data = spell.get("effectiveness", None)
+            
+            if effectiveness_data:
+                # Extract effectiveness information
+                compatibility = effectiveness_data["compatibility"]
+                effective_level = effectiveness_data["effective_level"]
+                level_adjustment = effectiveness_data["level_adjustment"]
+                descriptor = effectiveness_data["descriptor"]
+                
+                # Format level adjustment text
+                if level_adjustment > 0:
+                    level_text = f"increased by {level_adjustment} to {effective_level}"
+                elif level_adjustment < 0:
+                    level_text = f"decreased by {abs(level_adjustment)} to {effective_level}"
+                else:
+                    level_text = f"unchanged at {effective_level}"
+                
+                # The compatibility value is already standardized from Standardized_Compatibility.json
+                # Use compatibility directly without recalculating
+                compatibility_value = compatibility
+                
+                # Calculate the affinity bonus based on compatibility
+                affinity_bonus = compatibility // 10
+                
+                # Create the dice notation formula
+                # Assume a default class_die of 10 if not specified elsewhere
+                class_die = 10
+                if hasattr(self, "spell_maker") and hasattr(self.spell_maker, "spell_calculator"):
+                    # If we have a caster with bloodline, try to get the appropriate class die
+                    class SimpleCaster:
+                        def __init__(self, bloodline):
+                            self.bloodline = bloodline
+                            self.class_die = 10
+                    caster = SimpleCaster(bloodline)
+                    # If there's a way to determine class_die based on bloodline, it would go here
+                
+                # Use formula from effectiveness_data if available, otherwise create a fallback
+                formula = effectiveness_data.get("formula", f"{power_level}d{class_die}+{affinity_bonus}")
+                
+                # Add detailed effectiveness info to description
+                effectiveness_info = (
+                    f"\n\nBloodline Effectiveness:\n"
+                    f"Your {bloodline} bloodline has {compatibility}% affinity with {element} magic.\n"
+                    f"Spell effectiveness: {descriptor}\n"
+                    f"Effective spell formula: {formula}\n"
+                    f"Effective spell level: {level_text}"
+                )
+                description += effectiveness_info
+            else:
+                # Fallback to basic compatibility info if effectiveness data is not available
+                compatibility = self.data_loader.get_bloodline_element_compatibility(bloodline, element)
+                description += f"\n\nBloodline Compatibility: Your {bloodline} bloodline has {compatibility:.0f}% affinity with {element} magic."
             
             # Display the results
             self._set_output_text(spell.get("incantation", ""), description)
             
-            self.status_var.set(f"Created spell: {effect} {element} ({compatibility:.0f}% compatibility with {bloodline})")
+            # Update status bar
+            if effectiveness_data:
+                self.status_var.set(
+                    f"Created spell: {effect} {element} ({compatibility}% compatibility, {effectiveness_data['descriptor']})"
+                )
+            else:
+                self.status_var.set(f"Created spell: {effect} {element} ({compatibility:.0f}% compatibility with {bloodline})")
         except Exception as e:
             self.status_var.set(f"Error creating spell: {str(e)}")
             messagebox.showerror("Spell Creation Error", f"Could not create spell: {str(e)}")

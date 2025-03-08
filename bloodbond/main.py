@@ -17,6 +17,7 @@ from pathlib import Path
 from bloodbond.core.data_loader import DataLoader
 from bloodbond.core.element_mapper import ElementMapper
 from bloodbond.core.spell_maker import SpellMaker
+from bloodbond.core.spell_calculator import SpellCalculator
 
 # Import UI components
 from bloodbond.ui.gui import SpellCreatorApp
@@ -39,7 +40,7 @@ def setup_application():
     Initialize application resources and data loaders.
     
     Returns:
-        tuple: Containing DataLoader, ElementMapper, and SpellMaker instances
+        tuple: Containing DataLoader, ElementMapper, SpellMaker, and SpellCalculator instances
     """
     try:
         logger.info("Initializing BloodBond Enhanced Tools")
@@ -53,11 +54,14 @@ def setup_application():
         # Initialize element mapper
         element_mapper = ElementMapper()
         
+        # Initialize spell calculator
+        spell_calculator = SpellCalculator()
+        
         # Initialize spell maker
-        spell_maker = SpellMaker(data_loader, element_mapper)
+        spell_maker = SpellMaker(data_loader, element_mapper, spell_calculator)
         
         logger.info("Application setup complete")
-        return data_loader, element_mapper, spell_maker
+        return data_loader, element_mapper, spell_maker, spell_calculator
     
     except Exception as e:
         logger.error(f"Error during application setup: {str(e)}")
@@ -77,7 +81,7 @@ def start_gui(use_ctk=False):
         logger.info("Starting GUI application")
         
         # Initialize the application components
-        data_loader, element_mapper, spell_maker = setup_application()
+        data_loader, element_mapper, spell_maker, spell_calculator = setup_application()
         
         # Create the tkinter root window
         import tkinter as tk
@@ -116,7 +120,7 @@ def start_cli():
     """
     try:
         logger.info("Starting CLI application")
-        data_loader, element_mapper, spell_maker = setup_application()
+        data_loader, element_mapper, spell_maker, spell_calculator = setup_application()
         
         print("BloodBond Enhanced Tools CLI")
         print("==========================")

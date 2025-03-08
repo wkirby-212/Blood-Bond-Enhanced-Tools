@@ -1,10 +1,11 @@
 import json
 import os
 from pathlib import Path
-from typing import Dict, Any, Optional, List, Union, TypedDict, cast
+from typing import Dict, Any, Optional, List, Union, TypedDict, cast, Set
 import logging
 from functools import lru_cache
 import jsonschema
+from bloodbond.core.element_mapper import ElementMapper
 
 from bloodbond.core.exceptions import (
     DataError, 
@@ -75,6 +76,7 @@ class DataLoader:
         self.spell_descriptions_path = self.data_dir / 'spell_descriptions.json'
         self.synonyms_path = self.data_dir / 'synonyms.json'
         self.timing_patterns_path = self.data_dir / 'timing_patterns.json'
+        self.compatibility_path = self.data_dir / 'Standardized_Compatibility.json'
         
         # Validate that all required files exist
         self._validate_file_paths()
@@ -88,7 +90,8 @@ class DataLoader:
             (self.spell_data_path, "Spell data"),
             (self.spell_descriptions_path, "Spell descriptions"),
             (self.synonyms_path, "Synonyms"),
-            (self.timing_patterns_path, "Timing patterns")
+            (self.timing_patterns_path, "Timing patterns"),
+            (self.compatibility_path, "Standardized Compatibility")
         ]
         
         for file_path, file_desc in required_files:
@@ -179,6 +182,20 @@ class DataLoader:
         
         return cast(TimingPatternsDict, self._cache['timing_patterns'])
 
+    @lru_cache(maxsize=1)
+    def load_compatibility_data(self) -> Dict[str, Dict[str, Dict[str, List[str]]]]:
+        """
+        Load bloodline compatibility data from the Standardized_Compatibility.json file.
+        
+        Returns:
+            Dictionary containing bloodline compatibility data.
+        """
+        if 'compatibility_data' not in self._cache:
+            self.logger.info(f"Loading compatibility data from {self.compatibility_path}")
+            self._cache['compatibility_data'] = self._load_json_file(self.compatibility_path)
+        
+        return self._cache['compatibility_data']
+
     def get_bloodline_affinities(self) -> Dict[str, Dict[str, float]]:
         """
         Get bloodline affinities from the spell data.
@@ -186,12 +203,15 @@ class DataLoader:
         Returns:
             Dictionary mapping bloodlines to their element affinities.
         """
+        # For backward compatibility, still return from spell_data.json
         spell_data = self.load_spell_data()
         return spell_data['bloodline_affinities']
         
     def get_bloodline_element_compatibility(self, bloodline: str, element: str) -> float:
         """
         Calculate the compatibility percentage between a bloodline and an element.
+        
+        Uses the Standardized_Compatibility.json file as the source of truth for compatibility values.
         
         Args:
             bloodline: The name of the bloodline (e.g., 'Moon', 'Water')
@@ -202,30 +222,35 @@ class DataLoader:
             Returns 0 if the bloodline or element doesn't exist, or if they have no affinity.
         """
         try:
-            # Get the bloodline affinities data
-            affinities = self.get_bloodline_affinities()
+            # Load the standardized compatibility data
+            compatibility_data = self.load_compatibility_data()
             
-            # Check if the bloodline exists
-            if bloodline not in affinities:
-                self.logger.warning(f"Bloodline '{bloodline}' not found in affinities data")
+            # Check if the "Blood line" key exists
+            if "Blood line" not in compatibility_data:
+                self.logger.warning(f"'Blood line' key not found in compatibility data")
                 return 0.0
             
-            # Special case for Sun bloodline
-            if bloodline == "Sun":
-                # If the element is Sun, return 100% compatibility
-                if element == "Sun":
-                    return 100.0
-                # For ANY element or any other element, return 50% (neutral) compatibility
-                else:
-                    return 50.0
-                
+            bloodlines = compatibility_data["Blood line"]
+            
+            # Check if the bloodline exists
+            if bloodline not in bloodlines:
+                self.logger.warning(f"Bloodline '{bloodline}' not found in compatibility data")
+                return 0.0
+            
             # Get the categories for this bloodline
-            bloodline_data = affinities[bloodline]
+            bloodline_data = bloodlines[bloodline]
+            
+            # Special case for Sun bloodline with "All" elements
+            if bloodline == "Sun" and element != "Sun":
+                for category, elements in bloodline_data.items():
+                    if "All" in elements:
+                        import re
+                        percentage_match = re.search(r'(\d+)%', category)
+                        if percentage_match:
+                            return float(percentage_match.group(1))
             
             # Iterate through each category to find the element
             for category, elements in bloodline_data.items():
-                # Extract the percentage from the category name
-                # Category format is typically "Best 100%", "Good 60%", etc.
                 try:
                     # Find the percentage in the category string
                     import re
@@ -235,9 +260,6 @@ class DataLoader:
                         
                         # Check if the element is in this category
                         if element in elements:
-                            return percentage
-                        # Check for "All" which means it applies to all elements
-                        elif "All" in elements and element != bloodline:
                             return percentage
                 except Exception as e:
                     self.logger.error(f"Error parsing category '{category}': {e}")
@@ -342,6 +364,7 @@ class DataLoader:
         self.load_spell_descriptions.cache_clear()
         self.load_synonyms.cache_clear()
         self.load_timing_patterns.cache_clear()
+        self.load_compatibility_data.cache_clear()
 
     def reload_all_data(self) -> None:
         """Force reload of all data files."""
@@ -350,6 +373,7 @@ class DataLoader:
         self.load_spell_descriptions()
         self.load_synonyms()
         self.load_timing_patterns()
+        self.load_compatibility_data()
         self.logger.info("All data reloaded successfully")
 
     def get_spell_effects(self) -> List[str]:
@@ -367,10 +391,40 @@ class DataLoader:
         Get a list of available spell elements from the spoken spell table.
         
         Returns:
-            List of element names (keys from the element_prefixes dictionary).
+            List of element names (keys from the element_prefixes dictionary)
+            that are standardized according to Standardized_Compatibility.json.
         """
+        # Get all elements from the spell components
         spell_components = self.get_spoken_spell_components()
-        return list(spell_components.get('element_prefix', {}).keys())
+        all_elements = list(spell_components.get('element_prefix', {}).keys())
+        
+        # Get the standardized elements from the compatibility data
+        standardized_elements: Set[str] = set()
+        try:
+            compatibility_data = self.load_compatibility_data()
+            if "Blood line" in compatibility_data:
+                bloodlines = compatibility_data["Blood line"]
+                
+                # Collect all standardized elements from the compatibility data
+                for bloodline, categories in bloodlines.items():
+                    for category, elements in categories.items():
+                        standardized_elements.update(elements)
+                
+                # Remove "All" if it exists since it's a special marker, not an actual element
+                if "All" in standardized_elements:
+                    standardized_elements.remove("All")
+                
+                self.logger.debug(f"Standardized elements: {standardized_elements}")
+        except Exception as e:
+            self.logger.error(f"Error loading standardized elements: {e}")
+        
+        # Filter elements to only include those in the standardized list
+        filtered_elements = [elem for elem in all_elements if elem in standardized_elements]
+        
+        if len(filtered_elements) < len(all_elements):
+            self.logger.info(f"Filtered out {len(all_elements) - len(filtered_elements)} non-standardized elements")
+        
+        return filtered_elements
 
     def get_spell_descriptions(self) -> Dict[str, Dict[str, str]]:
         """

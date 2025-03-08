@@ -1,0 +1,88 @@
+2025-03-08 12:41:47,457 - __main__ - INFO - Starting GUI application
+2025-03-08 12:41:47,457 - __main__ - INFO - Initializing BloodBond Enhanced Tools
+2025-03-08 12:41:47,458 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 12:41:47,458 - __main__ - INFO - Application setup complete
+2025-03-08 12:41:47,505 - __main__ - INFO - Using standard tkinter as requested
+2025-03-08 12:41:47,506 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 12:41:47,628 - bloodbond.ui.spell_history - INFO - Loaded 6 spells from C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 12:41:47,629 - __main__ - INFO - Starting tkinter main loop
+2025-03-08 12:42:20,825 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Love'. Using as-is.
+2025-03-08 12:42:20,826 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Love'. Using as-is.
+2025-03-08 12:42:20,826 - bloodbond.core.data_loader - INFO - Loading spell descriptions from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_descriptions.json
+2025-03-08 12:46:24,529 - __main__ - INFO - Starting GUI application
+2025-03-08 12:46:24,529 - __main__ - INFO - Initializing BloodBond Enhanced Tools
+2025-03-08 12:46:24,529 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 12:46:24,530 - __main__ - INFO - Application setup complete
+2025-03-08 12:46:24,575 - __main__ - INFO - Using standard tkinter as requested
+2025-03-08 12:46:24,576 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 12:46:24,731 - bloodbond.ui.spell_history - INFO - Loaded 6 spells from C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 12:46:24,732 - __main__ - INFO - Starting tkinter main loop
+2025-03-08 12:46:28,944 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Death'. Using as-is.
+2025-03-08 12:46:28,944 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Death'. Using as-is.
+2025-03-08 12:46:28,946 - bloodbond.core.data_loader - INFO - Loading spell descriptions from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_descriptions.json
+2025-03-08 12:46:33,759 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Death'. Using as-is.
+2025-03-08 12:46:33,759 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Death'. Using as-is.
+2025-03-08 12:47:18,431 - bloodbond.ui.spell_history - INFO - Saved 7 spells to C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 12:47:18,431 - bloodbond.ui.spell_history - INFO - Spell 'Moon Curse' added to history
+2025-03-08 13:00:08,062 - __main__ - INFO - Starting GUI application
+2025-03-08 13:00:08,062 - __main__ - INFO - Initializing BloodBond Enhanced Tools
+2025-03-08 13:00:08,063 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 13:00:08,063 - __main__ - INFO - Application setup complete
+2025-03-08 13:00:08,109 - __main__ - INFO - Using standard tkinter as requested
+2025-03-08 13:00:08,109 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 13:00:08,255 - bloodbond.ui.spell_history - INFO - Loaded 7 spells from C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 13:00:08,255 - __main__ - INFO - Starting tkinter main loop
+2025-03-08 13:00:58,763 - bloodbond.core.data_loader - INFO - Loading spell descriptions from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_descriptions.json
+2025-03-08 13:01:13,829 - bloodbond.ui.spell_history - INFO - Saved 8 spells to C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 13:01:13,830 - bloodbond.ui.spell_history - INFO - Spell 'Moon Damage' added to history
+2025-03-08 13:01:30,128 - bloodbond.ui.spell_history - INFO - Saved 7 spells to C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 13:01:37,399 - bloodbond.ui.spell_history - INFO - Saved 6 spells to C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 13:01:40,862 - bloodbond.ui.spell_history - INFO - Saved 5 spells to C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 13:01:45,738 - bloodbond.ui.spell_history - INFO - Saved 4 spells to C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 13:01:49,270 - bloodbond.ui.spell_history - INFO - Saved 3 spells to C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 13:01:53,282 - bloodbond.ui.spell_history - INFO - Saved 2 spells to C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 13:01:56,884 - bloodbond.ui.spell_history - INFO - Saved 1 spells to C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 13:02:00,459 - bloodbond.ui.spell_history - INFO - Saved 0 spells to C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 13:03:05,808 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Song'. Using as-is.
+2025-03-08 13:03:05,808 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Song'. Using as-is.
+2025-03-08 13:03:08,728 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Song'. Using as-is.
+2025-03-08 13:03:08,728 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Song'. Using as-is.
+2025-03-08 13:03:14,548 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Song'. Using as-is.
+2025-03-08 13:03:14,549 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Song'. Using as-is.
+2025-03-08 13:03:21,408 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Love'. Using as-is.
+2025-03-08 13:03:21,409 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Love'. Using as-is.
+2025-03-08 13:03:24,415 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Love'. Using as-is.
+2025-03-08 13:03:24,415 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Love'. Using as-is.
+2025-03-08 13:03:35,208 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Love'. Using as-is.
+2025-03-08 13:03:35,208 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Love'. Using as-is.
+2025-03-08 13:30:46,465 - __main__ - INFO - Starting GUI application
+2025-03-08 13:30:46,467 - __main__ - INFO - Initializing BloodBond Enhanced Tools
+2025-03-08 13:30:46,467 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 13:30:46,467 - __main__ - INFO - Application setup complete
+2025-03-08 13:30:46,513 - __main__ - INFO - Using standard tkinter as requested
+2025-03-08 13:30:46,513 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 13:30:46,653 - bloodbond.ui.spell_history - INFO - Loaded 0 spells from C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 13:30:46,654 - __main__ - INFO - Starting tkinter main loop
+2025-03-08 13:30:57,124 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Death'. Using as-is.
+2025-03-08 13:30:57,124 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Death'. Using as-is.
+2025-03-08 13:30:57,124 - bloodbond.core.data_loader - INFO - Loading spell descriptions from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_descriptions.json
+2025-03-08 13:31:08,147 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Death'. Using as-is.
+2025-03-08 13:31:08,148 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Death'. Using as-is.
+2025-03-08 13:31:25,489 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Death'. Using as-is.
+2025-03-08 13:31:25,489 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Death'. Using as-is.
+2025-03-08 13:33:32,436 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Death'. Using as-is.
+2025-03-08 13:33:32,436 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Death'. Using as-is.
+2025-03-08 13:34:11,034 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Love'. Using as-is.
+2025-03-08 13:34:11,035 - bloodbond.core.element_mapper - WARNING - No suitable mapping found for 'Love'. Using as-is.
+2025-03-08 13:34:49,674 - bloodbond.ui.spell_history - INFO - Saved 1 spells to C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 13:34:49,675 - bloodbond.ui.spell_history - INFO - Spell 'Love Change' added to history
+2025-03-08 17:55:11,478 - __main__ - INFO - Starting GUI application
+2025-03-08 17:55:11,479 - __main__ - INFO - Initializing BloodBond Enhanced Tools
+2025-03-08 17:55:11,479 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 17:55:11,479 - __main__ - INFO - Application setup complete
+2025-03-08 17:55:11,524 - __main__ - INFO - Using standard tkinter as requested
+2025-03-08 17:55:11,524 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 17:55:11,551 - bloodbond.core.data_loader - INFO - Loading compatibility data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\Standardized_Compatibility.json
+2025-03-08 17:55:11,643 - bloodbond.ui.spell_history - INFO - Loaded 1 spells from C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 17:55:11,644 - __main__ - INFO - Starting tkinter main loop
+2025-03-08 17:55:20,412 - bloodbond.core.data_loader - INFO - Loading spell descriptions from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_descriptions.json

@@ -1,6 +1,6 @@
 # Blood Bond Enhanced Tools
 
-![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)
+![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.8%2B-brightgreen.svg)
 ![License](https://img.shields.io/badge/license-MIT-orange.svg)
 
@@ -16,6 +16,7 @@ Blood Bond Enhanced Tools is designed to assist Game Masters and players in crea
 - **Random Spell Generator**: Create random spells with configurable parameters
 - **Text to Spell Converter**: Convert descriptive text into fully-formed spells
 - **Bloodline Compatibility Check**: Analyze spell compatibility with different bloodlines
+- **Standardized Elements System**: Uses only standardized elements for consistent spell creation
 - **Spell History Management**: Save, load, and organize your created spells
 - **Modern User Interface**: Clean and intuitive design with tabbed navigation
 - **CLI Support**: Perform all operations through command-line for scripting and advanced users
@@ -101,6 +102,45 @@ bloodbond-cli text2spell "A powerful healing spell that mends wounds" --output h
 # Check bloodline compatibility
 bloodbond-cli compatibility --spell spell.json --bloodline "Blood Mage"
 ```
+
+## Standardized Elements System
+
+Blood Bond Enhanced Tools now uses a standardized elements system to ensure consistency in spell creation and compatibility calculations. The standardized elements are:
+
+- Moon
+- Water
+- Wind
+- Earth
+- Death
+- Fire
+- Protection
+- Love
+- Song
+- Sun
+
+The application enforces the use of these standardized elements throughout all functionality, ensuring reliable compatibility calculations and consistent gameplay experience.
+
+## Compatibility Calculations
+
+Compatibility between bloodlines and elements is calculated based on the values defined in the Standardized_Compatibility.json file. The system uses the following compatibility levels:
+
+- **Perfect (100%)**: Ideal match between bloodline and element
+- **Best (80%)**: Very strong affinity
+- **Good (60%)**: Strong affinity
+- **Moderate (40%)**: Average compatibility
+- **Weak (20%)**: Poor compatibility
+- **Neutral (50%)**: Baseline compatibility for undefined combinations
+
+The application automatically calculates the effectiveness of a spell based on these compatibility values, providing an accurate success rate for any bloodline-element combination.
+
+## Recent Improvements
+
+Version 0.3.0 includes several important improvements:
+
+- **Standardized Elements Enforcement**: The application now enforces the use of standardized elements only, preventing compatibility issues with non-standard elements
+- **Improved Compatibility Calculations**: Enhanced accuracy of bloodline-element compatibility calculations
+- **Directory Structure Optimization**: Streamlined codebase for better performance and maintainability
+- **Bug Fixes**: Resolved issues with element mapping and compatibility calculations
 
 ## Project Structure
 
