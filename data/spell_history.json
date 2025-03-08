@@ -1,0 +1,72 @@
+[
+  {
+    "name": "AddDeath",
+    "description": "Shadow essence merges with your target as you infuse them with death's transformative finality and spectral power. The spell lasts for 10_minute. It extends to targets up to 100 feet distant. Level 1.\n\nBloodline Compatibility: Your Death bloodline has 100% affinity with Death magic.",
+    "effect": "Add",
+    "element": "Death",
+    "duration": "10 Minutes",
+    "range": "100ft",
+    "level": 1,
+    "timestamp": 1741401123.304062
+  },
+  {
+    "name": "AddLove",
+    "description": "Rose-gold essence merges with your target as you infuse them with love's boundless compassion and emotional strength. The spell lasts for 10_minute. It extends to targets up to 100 feet distant. Level 1.\n\nBloodline Compatibility: Your Death bloodline has 40% affinity with Love magic.",
+    "effect": "Add",
+    "element": "Love",
+    "duration": "10 Minutes",
+    "range": "100ft",
+    "level": 1,
+    "timestamp": 1741401185.6459978
+  },
+  {
+    "name": "AddDeath",
+    "description": "Shadow essence merges with your target as you infuse them with death's transformative finality and spectral power. The spell lasts for 10_minute. It extends to targets up to 100 feet distant. Level 1.\n\nBloodline Compatibility: Your Death bloodline has 100% affinity with Death magic.",
+    "effect": "Add",
+    "element": "Death",
+    "duration": "10 Minutes",
+    "range": "100ft",
+    "level": 1,
+    "timestamp": 1741401366.6738088
+  },
+  {
+    "name": "AddMoon",
+    "description": "A Add spell using the power of Light. The spell lasts for 10_minute. It extends to targets up to 100 feet distant. Level 4.\n\nBloodline Compatibility: Your Moon bloodline has 100% affinity with Moon magic.",
+    "effect": "Add",
+    "element": "Moon",
+    "duration": "10 Minutes",
+    "range": "100ft",
+    "level": 4,
+    "timestamp": 1741401737.955055
+  },
+  {
+    "name": "AddFire",
+    "description": "A Add spell using the power of Sun. The spell lasts for 10_minute. It extends to targets up to 100 feet distant. Level 1.\n\nBloodline Compatibility: Your Sun bloodline has 50% affinity with Fire magic.",
+    "effect": "Add",
+    "element": "Fire",
+    "duration": "10 Minutes",
+    "range": "100ft",
+    "level": 1,
+    "timestamp": 1741401864.3991034
+  },
+  {
+    "name": "AddDeath",
+    "description": "Shadow essence merges with your target as you infuse them with death's transformative finality and spectral power. The spell lasts for 10_minute. It extends to targets up to 100 feet distant. Level 1.\n\nBloodline Compatibility: Your Death bloodline has 100% affinity with Death magic.",
+    "effect": "Add",
+    "element": "Death",
+    "duration": "10 Minutes",
+    "range": "100ft",
+    "level": 1,
+    "timestamp": 1741401978.4234996
+  },
+  {
+    "name": "AddDeath",
+    "description": "Shadow essence merges with your target as you infuse them with death's transformative finality and spectral power. The spell lasts for 10_minute. It extends to targets up to 100 feet distant. Level 1.\n\nBloodline Compatibility: Your Death bloodline has 100% affinity with Death magic.",
+    "effect": "Add",
+    "element": "Death",
+    "duration": "10 Minutes",
+    "range": "100ft",
+    "level": 1,
+    "timestamp": 1741402064.334014
+  }
+]

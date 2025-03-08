@@ -1,0 +1,27 @@
+# GUI Enhancement
+customtkinter==5.2.0      # Modern-looking tkinter widgets
+pillow==10.0.0            # Required for image handling in GUIs
+
+# Data Processing
+pandas==2.0.3             # Data manipulation and analysis
+pyyaml==6.0.1             # YAML file support (alternative to JSON)
+jsonschema==4.19.0        # JSON validation
+
+# String Manipulation
+rapidfuzz==3.2.0          # Fast string matching and similarity
+nltk==3.8.1               # Natural language processing toolkit
+
+# Utility
+tqdm==4.66.1              # Progress bars
+colorama==0.4.6           # Colored terminal output
+python-dotenv==1.0.0      # Environment variable management
+ttkthemes                # Additional themes for tkinter
+pyperclip                # Cross-platform clipboard support
+rich                     # Rich text and formatting in terminal
+
+# Development Tools
+pytest==7.4.0             # Testing framework
+black==23.7.0             # Code formatter
+mypy==1.5.1               # Static type checking
+
+
