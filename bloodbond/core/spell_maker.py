@@ -66,7 +66,8 @@ class SpellMaker:
                      range_value: str = "self", 
                      level: int = 1,
                      bloodline: str = None,
-                     magical_affinity: int = 0) -> Dict[str, Any]:
+                     magical_affinity: int = 0,
+                     specialty = None) -> Dict[str, Any]:
         """
         Create a new spell with the specified parameters.
         
@@ -91,7 +92,12 @@ class SpellMaker:
             DataError: If required data cannot be loaded or is malformed
         """
         # Generate cache key for this spell combination
-        cache_key = f"{effect}|{element}|{duration}|{range_value}|{level}|{bloodline}|{magical_affinity}"
+        if specialty:
+            # Include specialty id or name in the cache key if it's provided
+            specialty_id = getattr(specialty, 'id', None) or getattr(specialty, 'name', str(specialty))
+            cache_key = f"{effect}|{element}|{duration}|{range_value}|{level}|{bloodline}|{magical_affinity}|{specialty_id}"
+        else:
+            cache_key = f"{effect}|{element}|{duration}|{range_value}|{level}|{bloodline}|{magical_affinity}"
         
         # Return cached spell if available
         if cache_key in self.cached_spells:
@@ -113,9 +119,8 @@ class SpellMaker:
         effectiveness_data = None
         if bloodline:
             effectiveness_data = self.calculate_spell_effectiveness(
-                bloodline, mapped_element, level, magical_affinity
+                bloodline, mapped_element, level, magical_affinity, specialty
             )
-        
         # Create spell object
         spell = {
             "effect": effect,
@@ -129,6 +134,11 @@ class SpellMaker:
             "bloodline": bloodline,
             "magical_affinity": magical_affinity
         }
+        
+        # Add specialty information if available
+        if specialty:
+            spell["specialty"] = specialty.__class__.__name__
+            spell["specialty_level"] = specialty.level
         
         # Add effectiveness data if available
         if effectiveness_data:
@@ -786,7 +796,7 @@ class SpellMaker:
         return matches[:limit]
 
     def calculate_spell_effectiveness(self, bloodline: str, element: str, 
-                                    spell_level: int, magical_affinity: int = 0) -> Dict[str, Any]:
+                                   spell_level: int, magical_affinity: int = 0, specialty = None) -> Dict[str, Any]:
         """
         Calculate the effectiveness of a spell based on bloodline compatibility.
         
@@ -795,6 +805,7 @@ class SpellMaker:
             element: The element of the spell
             spell_level: The base level of the spell
             magical_affinity: The caster's magical affinity
+            specialty: The caster's magic specialty
             
         Returns:
             Dictionary containing effectiveness data including:
@@ -806,16 +817,31 @@ class SpellMaker:
         """
         # Simple caster object to pass to SpellCalculator methods
         class SpellCaster:
-            def __init__(self, bloodline, magical_affinity):
+            def __init__(self, bloodline, magical_affinity, specialty=None):
                 self.bloodline = bloodline
                 self.magical_affinity = magical_affinity
-                self.preferred_elements = []
-                self.restricted_elements = []
-                # Default class die is d10 for mages
-                self.class_die = 10
+                self.specialty = specialty
+                
+                # Get specialty attributes if available
+                if specialty and hasattr(specialty, 'preferred_elements'):
+                    self.preferred_elements = specialty.preferred_elements
+                else:
+                    self.preferred_elements = []
+                    
+                if specialty and hasattr(specialty, 'restricted_elements'):
+                    self.restricted_elements = specialty.restricted_elements
+                else:
+                    self.restricted_elements = []
+                    
+                # Use specialty class die if available, otherwise default to d10
+                if specialty and hasattr(specialty, 'class_die'):
+                    self.class_die = specialty.class_die
+                else:
+                    # Default class die is d10 for mages
+                    self.class_die = 10
         
         # Create a temporary caster object
-        caster = SpellCaster(bloodline, magical_affinity)
+        caster = SpellCaster(bloodline, magical_affinity, specialty)
         
         # Get the exact compatibility percentage from the SpellCalculator
         # This uses the authoritative values from Standardized_Compatibility.json
@@ -834,7 +860,17 @@ class SpellMaker:
         # Create the formula in dice notation: (level"d"'class die') + affinity_bonus
         formula = f"{spell_level}d{caster.class_die}+{affinity_bonus}"
         
-        # Generate descriptor based on the exact compatibility value
+        # Apply any specialty-specific bonuses to the formula
+        specialty_bonus = 0
+        if specialty and hasattr(specialty, 'calculate_spell_bonus'):
+            specialty_bonus = specialty.calculate_spell_bonus(element, spell_level)
+            if specialty_bonus > 0:
+                formula += f"+{specialty_bonus}"
+                
+        # Create the final formula using effective_level instead of spell_level
+        final_formula = f"{effective_level}d{caster.class_die}+{affinity_bonus}"
+        if specialty_bonus > 0:
+            final_formula += f"+{specialty_bonus}"
         if compatibility == 100:
             descriptor = "Perfect Harmony"
         elif compatibility == 80:
@@ -856,6 +892,7 @@ class SpellMaker:
             "effective_level": effective_level,
             "level_adjustment": effective_level - spell_level,
             "formula": formula,
+            "final_formula": final_formula,
             "affinity_bonus": affinity_bonus,
             "descriptor": descriptor
         }

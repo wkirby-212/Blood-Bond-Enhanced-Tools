@@ -24,6 +24,9 @@ from bloodbond.core.element_mapper import ElementMapper
 from bloodbond.utils.nl_processor import NLProcessor
 from bloodbond.ui.spell_history import SpellTomeWindow
 from bloodbond.utils.string_utils import format_spell_name
+from bloodbond.core.magic_specialties import (
+    NoSpecialty, Chronomage, Graveturgy, Illusionist, Siren, WarMage, Alchemist, NatureShaman
+)
 from bloodbond.core.exceptions import (
     BloodBondError, DataError, FileNotFoundError, MalformedDataError, InvalidDataError,
     SpellError, InvalidParameterError, IncompatibleElementsError, SpellLimitError, SpellValidationError,
@@ -122,6 +125,21 @@ class SpellCreatorApp:
         # Sort bloodlines alphabetically
         self.bloodlines = sorted(self.bloodline_affinities.keys())
         
+        # Define magic specialties
+        # Define magic specialties
+        self.magic_specialties = ["No Specialty", "Chronomage", "Graveturgy", "Illusionist", "Siren", "War Mage", "Alchemist", "Nature Shaman"]
+        
+        # Map specialty names to their classes
+        self.specialty_classes = {
+            "No Specialty": NoSpecialty,
+            "Chronomage": Chronomage,
+            "Graveturgy": Graveturgy,
+            "Illusionist": Illusionist,
+            "Siren": Siren,
+            "War Mage": WarMage,
+            "Alchemist": Alchemist,
+            "Nature Shaman": NatureShaman
+        }
         # Set up CustomTkinter theme
         if USE_CTK:
             ctk.set_appearance_mode("dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -152,9 +170,10 @@ class SpellCreatorApp:
             "lock_element": bool_var_class(value=False),
             "lock_duration": bool_var_class(value=False),
             "lock_range": bool_var_class(value=False),
+            "lock_range": bool_var_class(value=False),
             "bloodline": var_class(),
+            "magic_specialty": var_class(),
         }
-            
         self.root.title("Blood Bond Spell Creator")
         self.root.geometry("900x700")
         self.root.minsize(800, 600)
@@ -344,12 +363,25 @@ class SpellCreatorApp:
         if self.bloodlines:
             self.tk_vars["bloodline"].set(self.bloodlines[0])
         
+        # Magic Specialty
+        specialty_label = label_class(left_column, text="Magic Specialty:")
+        specialty_label.pack(anchor=tk.W, pady=(0, 5))
+        
+        if USE_CTK:
+            specialty_dropdown = combobox_class(left_column, values=self.magic_specialties,
+                                         variable=self.tk_vars["magic_specialty"])
+        else:
+            specialty_dropdown = combobox_class(left_column, values=self.magic_specialties,
+                                         textvariable=self.tk_vars["magic_specialty"])
+        specialty_dropdown.pack(fill=tk.X, pady=(0, 10))
+        if self.magic_specialties:
+            self.tk_vars["magic_specialty"].set(self.magic_specialties[0])
+        
         # Display compatibility between bloodline and selected element
         self.compatibility_var = ctk.StringVar() if USE_CTK else tk.StringVar()
         # Element
         element_label = label_class(left_column, text="Element:")
         element_label.pack(anchor=tk.W, pady=(0, 5))
-        
         if USE_CTK:
             element_dropdown = combobox_class(left_column, values=self.elements,
                                           variable=self.tk_vars["element"])
@@ -520,7 +552,16 @@ class SpellCreatorApp:
         lock_description = label_class(locks_frame, text="Check boxes to keep these parameters fixed when generating random spells", 
                                   wraplength=300, font=("Helvetica", 9, "italic"))
         lock_description.pack(anchor=tk.W, pady=(0, 5))
-
+        
+        # Magic Specialty lock
+        specialty_lock_frame = frame_class(locks_frame)
+        specialty_lock_frame.pack(fill=tk.X, pady=2)
+        
+        # Add a lock_magic_specialty variable
+        self.tk_vars["lock_magic_specialty"] = tk.BooleanVar(value=False)
+        specialty_lock = checkbox_class(specialty_lock_frame, text="Magic Specialty", 
+                                       variable=self.tk_vars["lock_magic_specialty"])
+        specialty_lock.pack(side=tk.LEFT)
         # Effect lock
         effect_lock_frame = frame_class(locks_frame)
         effect_lock_frame.pack(fill=tk.X, pady=2)
@@ -945,6 +986,7 @@ class SpellCreatorApp:
             effect = self.tk_vars["effect"].get()
             element = self.tk_vars["element"].get()
             bloodline = self.tk_vars["bloodline"].get()
+            magic_specialty = self.tk_vars["magic_specialty"].get()
             
             # Get the display value and convert back to the internal key
             duration_display = self.tk_vars["duration"].get()
@@ -958,7 +1000,13 @@ class SpellCreatorApp:
                 self._show_error("All fields are required")
                 return
             
-            # Create the spell with bloodline information
+            # Create specialty instance with appropriate level
+            specialty_class = self.specialty_classes.get(magic_specialty)
+            specialty_instance = None
+            if specialty_class:
+                specialty_instance = specialty_class(level=power_level)
+            
+            # Create the spell with bloodline and specialty information
             spell = self.spell_maker.create_spell(
                 effect=effect,
                 element=element,
@@ -966,7 +1014,8 @@ class SpellCreatorApp:
                 range_value=range_val,
                 level=power_level,
                 bloodline=bloodline,
-                magical_affinity=0  # Default value, can be enhanced with character progression
+                magical_affinity=0,  # Default value, can be enhanced with character progression
+                specialty=specialty_instance
             )
             
             # Use original text as description if available and option is enabled
@@ -1006,28 +1055,58 @@ class SpellCreatorApp:
                 if hasattr(self, "spell_maker") and hasattr(self.spell_maker, "spell_calculator"):
                     # If we have a caster with bloodline, try to get the appropriate class die
                     class SimpleCaster:
-                        def __init__(self, bloodline):
+                        def __init__(self, bloodline, specialty=None):
                             self.bloodline = bloodline
-                            self.class_die = 10
-                    caster = SimpleCaster(bloodline)
+                            self.specialty = specialty
+                            # Use specialty class die if available
+                            if specialty and hasattr(specialty, 'class_die'):
+                                self.class_die = specialty.class_die
+                            else:
+                                self.class_die = 10
+                            
+                            # Set preferred and restricted elements if specialty has them
+                            if specialty and hasattr(specialty, 'preferred_elements'):
+                                self.preferred_elements = specialty.preferred_elements
+                            else:
+                                self.preferred_elements = []
+                                
+                            if specialty and hasattr(specialty, 'restricted_elements'):
+                                self.restricted_elements = specialty.restricted_elements
+                            else:
+                                self.restricted_elements = []
+                    caster = SimpleCaster(bloodline, specialty_instance)
                     # If there's a way to determine class_die based on bloodline, it would go here
                 
-                # Use formula from effectiveness_data if available, otherwise create a fallback
-                formula = effectiveness_data.get("formula", f"{power_level}d{class_die}+{affinity_bonus}")
-                
-                # Add detailed effectiveness info to description
-                effectiveness_info = (
-                    f"\n\nBloodline Effectiveness:\n"
-                    f"Your {bloodline} bloodline has {compatibility}% affinity with {element} magic.\n"
-                    f"Spell effectiveness: {descriptor}\n"
-                    f"Effective spell formula: {formula}\n"
-                    f"Effective spell level: {level_text}"
+                if effectiveness_data:
+                    # Use formula from effectiveness_data if available, otherwise create a fallback
+                    formula = effectiveness_data.get("formula", f"{power_level}d{class_die}+{affinity_bonus}")
+
+                    # Get the final formula that uses the effective level
+                    final_formula = effectiveness_data.get("final_formula", "")
+                    
+                    # Add detailed effectiveness info to description
+                    effectiveness_info = (
+                        f"\n\nBloodline Effectiveness:\n"
+                        f"Your {bloodline} bloodline has {compatibility}% affinity with {element} magic.\n"
+                        f"Spell effectiveness: {descriptor}\n"
+                        f"Base spell formula: {formula}\n"
+                        f"Final spell formula: {final_formula}\n"
+                        f"Effective spell level: {level_text}"
+                    )
+                    description += effectiveness_info
+                else:
+                    # Fallback to basic compatibility info if effectiveness data is not available
+                    compatibility = self.data_loader.get_bloodline_element_compatibility(bloodline, element)
+                    description += f"\n\nBloodline Compatibility: Your {bloodline} bloodline has {compatibility:.0f}% affinity with {element} magic."
+            # Add magic specialty information to the description if available
+            if specialty_instance:
+                specialty_info = (
+                    f"\n\nMagic Specialty: {magic_specialty}\n"
+                    f"Class Die: d{specialty_instance.class_die}\n"
+                    f"Preferred Elements: {', '.join(specialty_instance.preferred_elements)}\n"
+                    f"Restricted Elements: {', '.join(specialty_instance.restricted_elements)}\n"
                 )
-                description += effectiveness_info
-            else:
-                # Fallback to basic compatibility info if effectiveness data is not available
-                compatibility = self.data_loader.get_bloodline_element_compatibility(bloodline, element)
-                description += f"\n\nBloodline Compatibility: Your {bloodline} bloodline has {compatibility:.0f}% affinity with {element} magic."
+                description += specialty_info
             
             # Display the results
             self._set_output_text(spell.get("incantation", ""), description)
@@ -1076,6 +1155,12 @@ class SpellCreatorApp:
             # Reset power level to 1
             self.tk_vars["power_level"].set(1)
             
+            # Reset magic specialty to the first value
+            if self.magic_specialties:
+                self.tk_vars["magic_specialty"].set(self.magic_specialties[0])
+            else:
+                self.tk_vars["magic_specialty"].set("")
+            
             # Clear output text fields
             self.incantation_text.delete("1.0", tk.END)
             self.description_text.delete("1.0", tk.END)
@@ -1111,6 +1196,7 @@ class SpellCreatorApp:
             lock_element = self.tk_vars["lock_element"].get()
             lock_duration = self.tk_vars["lock_duration"].get()
             lock_range = self.tk_vars["lock_range"].get()
+            lock_magic_specialty = self.tk_vars["lock_magic_specialty"].get() if "lock_magic_specialty" in self.tk_vars else False
             
             # Get current parameter values for locked parameters
             current_effect = self.tk_vars["effect"].get()
@@ -1118,6 +1204,7 @@ class SpellCreatorApp:
             current_duration_display = self.tk_vars["duration"].get() 
             current_duration = self.duration_reverse_mapping.get(current_duration_display, current_duration_display)
             current_range = self.tk_vars["range"].get()
+            current_magic_specialty = self.tk_vars["magic_specialty"].get()
             
             # Randomly select parameters, respecting locked values
             random_effect = current_effect if lock_effect else (random.choice(self.effects) if self.effects else "")
@@ -1132,11 +1219,18 @@ class SpellCreatorApp:
                 
             random_range = current_range if lock_range else (random.choice(self.ranges) if self.ranges else "")
             random_power_level = random.randint(1, 10)
+            random_magic_specialty = random.choice(self.magic_specialties) if self.magic_specialties else ""
 
             # Validate random selections
-            if not all([random_effect, random_element, random_duration, random_range]):
+            if not all([random_effect, random_element, random_duration, random_range, random_magic_specialty]):
                 self._show_error("Unable to generate random spell: missing data options")
                 return
+
+            # Create specialty instance
+            specialty_class = self.specialty_classes.get(random_magic_specialty)
+            specialty_instance = None
+            if specialty_class:
+                specialty_instance = specialty_class(level=random_power_level)
 
             # Create the spell
             spell = self.spell_maker.create_spell(
@@ -1144,7 +1238,8 @@ class SpellCreatorApp:
                 element=random_element,
                 duration=random_duration,
                 range_value=random_range,
-                level=random_power_level
+                level=random_power_level,
+                specialty=specialty_instance
             )
 
             # Display the results
@@ -1163,6 +1258,7 @@ class SpellCreatorApp:
             details += f"Duration: {random_duration_display}{' (Locked)' if lock_duration else ''}\n"
             details += f"Range: {random_range}{' (Locked)' if lock_range else ''}\n"
             details += f"Power Level: {random_power_level}\n"
+            details += f"Magic Specialty: {random_magic_specialty}\n"
             
             # Update the main spell creation fields with the generated parameters
             self.tk_vars["effect"].set(random_effect)
@@ -1170,6 +1266,7 @@ class SpellCreatorApp:
             self.tk_vars["duration"].set(random_duration_display)
             self.tk_vars["range"].set(random_range)
             self.tk_vars["power_level"].set(random_power_level)
+            self.tk_vars["magic_specialty"].set(random_magic_specialty)
             self.spell_details_text.insert("1.0", details)
 
             self.status_var.set(f"Generated random spell: {random_effect} {random_element}")
@@ -1322,7 +1419,8 @@ class SpellCreatorApp:
                     element=element,
                     duration=duration_key,
                     range_value=range_val,
-                    level=self.tk_vars["power_level"].get()
+                    level=self.tk_vars["power_level"].get(),
+                    specialty=specialty_instance
                 )
                 
                 # Override the generated description with the original text

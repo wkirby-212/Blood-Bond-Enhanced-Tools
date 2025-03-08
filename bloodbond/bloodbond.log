@@ -86,3 +86,82 @@
 2025-03-08 17:55:11,643 - bloodbond.ui.spell_history - INFO - Loaded 1 spells from C:\Users\daemo\.bloodbond\spell_history.json
 2025-03-08 17:55:11,644 - __main__ - INFO - Starting tkinter main loop
 2025-03-08 17:55:20,412 - bloodbond.core.data_loader - INFO - Loading spell descriptions from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_descriptions.json
+2025-03-08 22:09:55,027 - __main__ - INFO - Starting GUI application
+2025-03-08 22:09:55,027 - __main__ - INFO - Initializing BloodBond Enhanced Tools
+2025-03-08 22:09:55,028 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 22:09:55,028 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 22:09:55,028 - __main__ - INFO - Application setup complete
+2025-03-08 22:09:55,075 - __main__ - INFO - Using standard tkinter as requested
+2025-03-08 22:09:55,075 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 22:09:55,076 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 22:09:55,102 - bloodbond.core.data_loader - INFO - Loading compatibility data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\Standardized_Compatibility.json
+2025-03-08 22:09:55,228 - bloodbond.ui.spell_history - INFO - Loaded 1 spells from C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 22:09:55,228 - __main__ - INFO - Starting tkinter main loop
+2025-03-08 22:11:45,580 - __main__ - INFO - Starting GUI application
+2025-03-08 22:11:45,581 - __main__ - INFO - Initializing BloodBond Enhanced Tools
+2025-03-08 22:11:45,581 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 22:11:45,582 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 22:11:45,582 - __main__ - INFO - Application setup complete
+2025-03-08 22:11:45,625 - __main__ - INFO - Using standard tkinter as requested
+2025-03-08 22:11:45,626 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 22:11:45,626 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 22:11:45,654 - bloodbond.core.data_loader - INFO - Loading compatibility data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\Standardized_Compatibility.json
+2025-03-08 22:11:45,770 - bloodbond.ui.spell_history - INFO - Loaded 1 spells from C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 22:11:45,770 - __main__ - INFO - Starting tkinter main loop
+2025-03-08 22:14:56,950 - __main__ - INFO - Starting GUI application
+2025-03-08 22:14:56,950 - __main__ - INFO - Initializing BloodBond Enhanced Tools
+2025-03-08 22:14:56,951 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 22:14:56,951 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 22:14:56,951 - __main__ - INFO - Application setup complete
+2025-03-08 22:14:56,997 - __main__ - INFO - Using standard tkinter as requested
+2025-03-08 22:14:56,998 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 22:14:56,998 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 22:14:57,026 - bloodbond.core.data_loader - INFO - Loading compatibility data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\Standardized_Compatibility.json
+2025-03-08 22:14:57,149 - bloodbond.ui.spell_history - INFO - Loaded 1 spells from C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 22:14:57,150 - __main__ - INFO - Starting tkinter main loop
+2025-03-08 22:15:01,041 - bloodbond.core.data_loader - INFO - Loading spell descriptions from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_descriptions.json
+2025-03-08 22:20:57,192 - __main__ - INFO - Starting GUI application
+2025-03-08 22:20:57,193 - __main__ - INFO - Initializing BloodBond Enhanced Tools
+2025-03-08 22:20:57,193 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 22:20:57,194 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 22:20:57,194 - __main__ - INFO - Application setup complete
+2025-03-08 22:20:57,239 - __main__ - INFO - Using standard tkinter as requested
+2025-03-08 22:20:57,240 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 22:20:57,241 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 22:20:57,268 - bloodbond.core.data_loader - INFO - Loading compatibility data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\Standardized_Compatibility.json
+2025-03-08 22:20:57,395 - bloodbond.ui.spell_history - INFO - Loaded 1 spells from C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 22:20:57,395 - __main__ - INFO - Starting tkinter main loop
+2025-03-08 22:30:11,331 - __main__ - INFO - Starting GUI application
+2025-03-08 22:30:11,331 - __main__ - INFO - Initializing BloodBond Enhanced Tools
+2025-03-08 22:30:11,332 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 22:30:11,332 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 22:30:11,332 - __main__ - INFO - Application setup complete
+2025-03-08 22:30:11,378 - __main__ - INFO - Using standard tkinter as requested
+2025-03-08 22:30:11,379 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 22:30:11,379 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 22:30:11,380 - __main__ - ERROR - Error in GUI mode: name 'NoSpecialty' is not defined
+2025-03-08 22:31:12,433 - __main__ - INFO - Starting GUI application
+2025-03-08 22:31:12,433 - __main__ - INFO - Initializing BloodBond Enhanced Tools
+2025-03-08 22:31:12,434 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 22:31:12,434 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 22:31:12,434 - __main__ - INFO - Application setup complete
+2025-03-08 22:31:12,480 - __main__ - INFO - Using standard tkinter as requested
+2025-03-08 22:31:12,481 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 22:31:12,481 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 22:31:12,509 - bloodbond.core.data_loader - INFO - Loading compatibility data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\Standardized_Compatibility.json
+2025-03-08 22:31:12,632 - bloodbond.ui.spell_history - INFO - Loaded 1 spells from C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 22:31:12,633 - __main__ - INFO - Starting tkinter main loop
+2025-03-08 22:31:17,016 - bloodbond.core.data_loader - INFO - Loading spell descriptions from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_descriptions.json
+2025-03-08 23:04:01,695 - __main__ - INFO - Starting GUI application
+2025-03-08 23:04:01,695 - __main__ - INFO - Initializing BloodBond Enhanced Tools
+2025-03-08 23:04:01,695 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 23:04:01,695 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 23:04:01,695 - __main__ - INFO - Application setup complete
+2025-03-08 23:04:01,758 - __main__ - INFO - Using standard tkinter as requested
+2025-03-08 23:04:01,758 - bloodbond.core.element_mapper - INFO - Loaded standardized elements from: C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\core\..\data\Standardized_Compatibility.json
+2025-03-08 23:04:01,758 - bloodbond.core.data_loader - INFO - Loading spell data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_data.json
+2025-03-08 23:04:01,790 - bloodbond.core.data_loader - INFO - Loading compatibility data from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\Standardized_Compatibility.json
+2025-03-08 23:04:01,909 - bloodbond.ui.spell_history - INFO - Loaded 1 spells from C:\Users\daemo\.bloodbond\spell_history.json
+2025-03-08 23:04:01,909 - __main__ - INFO - Starting tkinter main loop
+2025-03-08 23:04:06,691 - bloodbond.core.data_loader - INFO - Loading spell descriptions from C:\Users\daemo\Desktop\Blood Bond Enhanced Tools\bloodbond\data\spell_descriptions.json
+2025-03-08 23:07:29,511 - bloodbond.ui.spell_history - INFO - Saved 0 spells to C:\Users\daemo\.bloodbond\spell_history.json
