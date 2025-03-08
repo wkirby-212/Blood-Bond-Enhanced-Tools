@@ -424,7 +424,7 @@ class SpellTomeWindow:
             text_match = not search_text or any(
                 search_text in str(value).lower() 
                 for key, value in spell.items() 
-                if key in ["name", "effect", "element", "description"]
+                if key in ["name", "effect", "element", "description", "incantation"]
             )
             
             # If all filters match, add to filtered list
@@ -504,8 +504,10 @@ class SpellTomeWindow:
                 f"Duration: {self.selected_spell.get('duration', 'N/A')}",
                 f"Mana Cost: {self.selected_spell.get('mana_cost', 'N/A')}",
                 f"Date Added: {self.selected_spell.get('date_added', 'Unknown')}",
+                "Incantation:",
+                f"{self.selected_spell.get('incantation', 'No incantation available.')}",
                 "\nDescription:",
-                f"{self.selected_spell.get('description', 'No description available.')}",
+                f"{self.selected_spell.get('description', 'No description available.')}"
             ]
             
             # Insert the details

@@ -1282,6 +1282,7 @@ class SpellCreatorApp:
             # Create the spell data to save
             spell_data = {
                 "name": spell_name.replace("-", " "),
+                "incantation": incantation,
                 "description": description,
                 "effect": effect,
                 "element": element,
@@ -1289,8 +1290,6 @@ class SpellCreatorApp:
                 "range": range_val,
                 "level": power_level
             }
-            
-            # Add the spell to history
             if hasattr(self, 'spell_history_panel'):
                 self.spell_history_panel.add_spell(spell_data)
                 self.status_var.set(f"Spell '{spell_name}' saved to history")
