@@ -32,7 +32,7 @@ pip install bloodbond-enhanced-tools
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/bloodbond-enhanced-tools.git
+git clone https://github.com/wkirby-212/bloodbond-enhanced-tools.git
 cd bloodbond-enhanced-tools
 
 # Install dependencies
