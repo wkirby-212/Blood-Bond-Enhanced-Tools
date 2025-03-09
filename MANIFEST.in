@@ -8,7 +8,7 @@ include requirements.txt
 include setup.py
 
 # Include bloodbond data files
-recursive-include bloodbond/data *.json
+recursive-include bloodbond/data *.json *.txt *.csv *.yaml *.yml
 
 # Include any additional package resources
 recursive-include bloodbond *.py

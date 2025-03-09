@@ -709,6 +709,117 @@ class SpellTomeWindow:
             if "date_added" not in spell:
                 spell["date_added"] = datetime.datetime.now().isoformat()
             
+            # Check for duplicate incantations
+            duplicate_spell = None
+            for existing_spell in self.spells:
+                if existing_spell.get("incantation") == spell.get("incantation"):
+                    duplicate_spell = existing_spell
+                    break
+            
+            # If a duplicate is found, ask the user which spell to keep
+            if duplicate_spell:
+                # Create a custom dialog to show both spells and ask the user which to keep
+                dialog = tk.Toplevel(self.parent)
+                dialog.title("Duplicate Spell Found")
+                dialog.geometry("650x500")
+                dialog.transient(self.parent)
+                dialog.grab_set()  # Make dialog modal
+                
+                # Initialize result variable
+                result_var = tk.IntVar(value=-1)  # -1: cancel, 0: keep old, 1: keep new
+                
+                # Create the comparison frame
+                frame = ttk.Frame(dialog, padding="10")
+                frame.pack(fill=tk.BOTH, expand=True)
+                
+                # Heading
+                ttk.Label(frame, text="A spell with the same incantation already exists.", font=("", 12, "bold")).pack(pady=(0, 10))
+                ttk.Label(frame, text="Please choose which spell to keep:").pack(pady=(0, 10))
+                
+                # Create comparison columns
+                comparison_frame = ttk.Frame(frame)
+                comparison_frame.pack(fill=tk.BOTH, expand=True, pady=10)
+                
+                # Existing spell column
+                old_frame = ttk.LabelFrame(comparison_frame, text="Existing Spell")
+                old_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 5))
+                
+                old_text = tk.Text(old_frame, wrap=tk.WORD, height=15, width=30)
+                old_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+                old_text.insert(tk.END, f"Name: {duplicate_spell.get('name', 'Unknown')}\n")
+                old_text.insert(tk.END, f"Effect: {duplicate_spell.get('effect', 'Unknown')}\n")
+                old_text.insert(tk.END, f"Element: {duplicate_spell.get('element', 'Unknown')}\n")
+                old_text.insert(tk.END, f"Level: {duplicate_spell.get('level', '0')}\n")
+                old_text.insert(tk.END, f"Date Added: {duplicate_spell.get('date_added', 'Unknown')}\n\n")
+                old_text.insert(tk.END, "Incantation:\n")
+                old_text.insert(tk.END, f"{duplicate_spell.get('incantation', 'No incantation')}\n\n")
+                old_text.insert(tk.END, "Description:\n")
+                old_text.insert(tk.END, f"{duplicate_spell.get('description', 'No description')}")
+                old_text.config(state=tk.DISABLED)
+                
+                # New spell column
+                new_frame = ttk.LabelFrame(comparison_frame, text="New Spell")
+                new_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=(5, 0))
+                
+                new_text = tk.Text(new_frame, wrap=tk.WORD, height=15, width=30)
+                new_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+                new_text.insert(tk.END, f"Name: {spell.get('name', 'Unknown')}\n")
+                new_text.insert(tk.END, f"Effect: {spell.get('effect', 'Unknown')}\n")
+                new_text.insert(tk.END, f"Element: {spell.get('element', 'Unknown')}\n")
+                new_text.insert(tk.END, f"Level: {spell.get('level', '0')}\n")
+                new_text.insert(tk.END, f"Date Added: {spell.get('date_added', 'Unknown')}\n\n")
+                new_text.insert(tk.END, "Incantation:\n")
+                new_text.insert(tk.END, f"{spell.get('incantation', 'No incantation')}\n\n")
+                new_text.insert(tk.END, "Description:\n")
+                new_text.insert(tk.END, f"{spell.get('description', 'No description')}")
+                new_text.config(state=tk.DISABLED)
+                
+                # Buttons
+                button_frame = ttk.Frame(frame)
+                button_frame.pack(fill=tk.X, pady=10)
+                
+                keep_old_btn = ttk.Button(
+                    button_frame, 
+                    text="Keep Existing Spell", 
+                    command=lambda: result_var.set(0) or dialog.destroy()
+                )
+                keep_old_btn.pack(side=tk.LEFT, padx=5, pady=5, expand=True, fill=tk.X)
+                
+                keep_new_btn = ttk.Button(
+                    button_frame, 
+                    text="Keep New Spell", 
+                    command=lambda: result_var.set(1) or dialog.destroy()
+                )
+                keep_new_btn.pack(side=tk.RIGHT, padx=5, pady=5, expand=True, fill=tk.X)
+                
+                cancel_btn = ttk.Button(
+                    frame, 
+                    text="Cancel", 
+                    command=lambda: result_var.set(-1) or dialog.destroy()
+                )
+                cancel_btn.pack(pady=(5, 10))
+                
+                # Center the dialog relative to the parent window
+                dialog.update_idletasks()
+                x = self.parent.winfo_rootx() + (self.parent.winfo_width() - dialog.winfo_width()) // 2
+                y = self.parent.winfo_rooty() + (self.parent.winfo_height() - dialog.winfo_height()) // 2
+                dialog.geometry(f"+{x}+{y}")
+                
+                # Wait for the dialog to be closed
+                self.parent.wait_window(dialog)
+                
+                # Process the result
+                result = result_var.get()
+                if result == -1:  # Cancel
+                    return
+                elif result == 0:  # Keep existing spell
+                    self.logger.info(f"Kept existing spell '{duplicate_spell.get('name')}' instead of new spell '{spell.get('name')}'")
+                    return
+                elif result == 1:  # Keep new spell
+                    # Remove the existing spell
+                    self.spells = [s for s in self.spells if s.get("id") != duplicate_spell.get("id")]
+                    self.logger.info(f"Replaced existing spell '{duplicate_spell.get('name')}' with new spell '{spell.get('name')}'")
+            
             # Add the spell to the list
             self.spells.append(spell)
             

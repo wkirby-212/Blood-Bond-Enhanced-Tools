@@ -120,17 +120,17 @@ Spells in BloodBond are created by combining syllables into words, with each syl
 2. **Syllable Dictionary**: Comprehensive reference for all syllables and their meanings
 3. **Spell Syntax Validator**: Check if created spells follow valid syntactical rules
 4. **Incantation Pronunciation Guide**: Audio and text guide for proper spell pronunciation
-5. **Custom Spell Library**: Save, organize, and retrieve custom-created spells
+5. **Custom Spell Library**: ✅ Save, organize, and retrieve custom-created spells with Write Spell functionality and duplicate spell detection
 
 ### Implementation Priority
 
-| Feature | Priority | Reasoning |
-|---------|----------|-----------|
-| Spell Builder | High | Core functionality for spell creation |
-| Syllable Dictionary | High | Essential reference for spell building |
-| Custom Spell Library | Medium | Important for user experience but builds on other features |
-| Spell Syntax Validator | Medium | Ensures created spells are valid but requires complex rules |
-| Incantation Pronunciation Guide | Low | Enhances immersion but not essential for mechanics |
+| Feature | Priority | Status | Reasoning |
+|---------|----------|--------|------------
+| Spell Builder | High | In Progress | Core functionality for spell creation |
+| Syllable Dictionary | High | In Progress | Essential reference for spell building |
+| Custom Spell Library | Medium | ✅ Completed | Write Spell functionality and duplicate spell detection implemented |
+| Spell Syntax Validator | Medium | Planned | Ensures created spells are valid but requires complex rules |
+| Incantation Pronunciation Guide | Low | Planned | Enhances immersion but not essential for mechanics |
 
 ## Elemental Interactions
 
@@ -299,9 +299,11 @@ This section outlines a phased approach to implementing the features described a
 ### Phase 1: Core Mechanics (1-2 months)
 - Implement Damage Calculator
 - Develop Range & Duration Calculator
-- Create Bloodline Compatibility Calculator
+- Create Bloodline Compatibility Calculator 
 - Build basic Spell Builder interface
 - Compile Syllable Dictionary
+- ✅ Implement Custom Spell Library with Write Spell functionality
+- ✅ Add duplicate spell detection to prevent redundant entries
 
 ### Phase 2: Advanced Mechanics (2-3 months)
 - Add SP Cost Optimizer
@@ -322,11 +324,13 @@ This section outlines a phased approach to implementing the features described a
 - Implement Role-Based Spell Recommendations
 - Create Magic System Guide with tutorials
 - Develop Cast Time Visualizer
-- Enhanced Custom Spell Library with sharing features
+- Enhance Custom Spell Library with additional features (sharing, categorization)
 
 ## Conclusion
 
 This roadmap provides a structured approach to implementing the rich magic system of BloodBond TTRPG into the application. By prioritizing features based on their importance to core gameplay mechanics, the development team can systematically enhance the application's functionality while providing the most value to users at each stage.
+
+Progress has been made with the implementation of the Custom Spell Library, featuring Write Spell functionality and duplicate spell detection. These features allow users to save both manually created and randomly generated spells to their history while preventing duplicate entries through an interactive selection dialog.
 
 The BloodBond magic system offers numerous opportunities for creative implementation, from basic spell building to advanced magical techniques. Following this roadmap will transform the application into a comprehensive tool for BloodBond players to explore the depth and complexity of the game's magic system.
 

@@ -1,6 +1,6 @@
 # Blood Bond Enhanced Tools
 
-![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)
+![Version](https://img.shields.io/badge/version-0.3.1-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.8%2B-brightgreen.svg)
 ![License](https://img.shields.io/badge/license-MIT-orange.svg)
 
@@ -13,11 +13,11 @@ Blood Bond Enhanced Tools is designed to assist Game Masters and players in crea
 ## Features
 
 - **Spell Creator**: Easily design new dialog spells with an intuitive interface
-- **Random Spell Generator**: Create random spells with configurable parameters
+- **Random Spell Generator**: Create random spells with configurable parameters and save them to history
 - **Text to Spell Converter**: Convert descriptive text into fully-formed spells
 - **Bloodline Compatibility Check**: Analyze spell compatibility with different bloodlines
 - **Standardized Elements System**: Uses only standardized elements for consistent spell creation
-- **Spell History Management**: Save, load, and organize your created spells
+- **Spell History Management**: Save, load, and organize your created spells with duplicate detection
 - **Modern User Interface**: Clean and intuitive design with tabbed navigation
 - **CLI Support**: Perform all operations through command-line for scripting and advanced users
 
@@ -73,7 +73,7 @@ python run_app.py
 The GUI features five main tabs:
 
 1. **Spell Creator**: Design custom spells by selecting components
-2. **Random Generator**: Generate randomized spells based on parameters
+2. **Random Generator**: Generate randomized spells based on parameters and save them to your spell history
 3. **Text to Spell**: Convert descriptive text into a formatted spell
 4. **Bloodline Compatibility**: Check spell compatibility with bloodlines
 5. **Spell History**: View, manage, and export your created spells
@@ -135,7 +135,14 @@ The application automatically calculates the effectiveness of a spell based on t
 
 ## Recent Improvements
 
-Version 0.3.0 includes several important improvements:
+Version 0.3.1 includes several important improvements:
+
+- **Write Spell Functionality**: Added ability to save randomly generated spells directly to your spell history
+- **Duplicate Spell Detection**: Implemented intelligent detection of duplicate spells with user choice dialog
+- **Spell Management Enhancement**: Improved organization of spell history with duplicate prevention
+- **UI Improvements**: Enhanced user experience with more contextual options for spell management
+
+Version 0.3.0 included:
 
 - **Standardized Elements Enforcement**: The application now enforces the use of standardized elements only, preventing compatibility issues with non-standard elements
 - **Improved Compatibility Calculations**: Enhanced accuracy of bloodline-element compatibility calculations

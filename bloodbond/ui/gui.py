@@ -518,7 +518,15 @@ class SpellCreatorApp:
             text="Lock Current",
             command=self.lock_current_parameters
         )
-        lock_current_button.pack(pady=(0, 20), padx=20, fill=tk.X)
+        lock_current_button.pack(pady=(0, 10), padx=20, fill=tk.X)
+        
+        # Write Spell button for saving current spell to history
+        write_spell_button = button_class(
+            left_column, 
+            text="Write Spell",
+            command=self.save_spell_to_history
+        )
+        write_spell_button.pack(pady=(0, 20), padx=20, fill=tk.X)
 
         # Output on the right
         # Incantation
@@ -1460,8 +1468,17 @@ class SpellCreatorApp:
             
             # Get spell information
             spell_name = format_spell_name(effect, element)
-            incantation = self.incantation_text.get("1.0", tk.END).strip()
-            description = self.description_text.get("1.0", tk.END).strip()
+            
+            # Check which tab is currently active
+            current_tab = self.notebook.index("current")
+            
+            # Get the text from the appropriate fields based on the active tab
+            if current_tab == 1:  # Random Generator tab (index 1)
+                incantation = self.random_incantation_text.get("1.0", tk.END).strip()
+                description = self.random_description_text.get("1.0", tk.END).strip()
+            else:  # Main spell creator tab (index 0) or any other tab
+                incantation = self.incantation_text.get("1.0", tk.END).strip()
+                description = self.description_text.get("1.0", tk.END).strip()
             
             # Check if we have output text
             if not incantation or not description:
@@ -1481,7 +1498,9 @@ class SpellCreatorApp:
             }
             if hasattr(self, 'spell_history_panel'):
                 self.spell_history_panel.add_spell(spell_data)
-                self.status_var.set(f"Spell '{spell_name}' saved to history")
+                # Update status message with tab info
+                tab_source = "Random Generator" if current_tab == 1 else "Spell Creator"
+                self.status_var.set(f"Spell '{spell_name}' from {tab_source} tab saved to history")
             else:
                 self.status_var.set(f"Error: Spell history panel not initialized")
         except Exception as e:

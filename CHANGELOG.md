@@ -2,7 +2,13 @@
 
 All notable changes to the Blood Bond Enhanced Tools project will be documented in this file.
 
-## [0.3.1] - 2025-03-10
+## [0.3.2] - 2025-03-09
+
+### Added
+- Added 'Write Spell' functionality to the Random Generator page, allowing users to save randomly generated spells to history
+- Implemented duplicate spell detection in Spell History functionality, providing users with a dialog to choose which version to keep when adding spells with identical incantations
+
+## [0.3.1] - 2025-03-09
 
 ### Added
 - Added "No Specialty" option to the Magic Specialties dropdown
