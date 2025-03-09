@@ -8,9 +8,13 @@ All notable changes to the Blood Bond Enhanced Tools project will be documented 
 - Added 'Write Spell' functionality to the Random Generator page, allowing users to save randomly generated spells to history
 - Implemented duplicate spell detection in Spell History functionality, providing users with a dialog to choose which version to keep when adding spells with identical incantations
 
+### Fixed
+- Fixed "Parameter Transfer Error" bug in Text to Spell feature caused by undefined specialty_instance variable in the use_nlp_parameters method of gui.py
+
 ## [0.3.1] - 2025-03-09
 
 ### Added
+
 - Added "No Specialty" option to the Magic Specialties dropdown
 - Implemented proper display of spell formula in spell descriptions
 - Added final formula calculation for spell effectiveness based on bloodline compatibility
@@ -27,6 +31,7 @@ All notable changes to the Blood Bond Enhanced Tools project will be documented 
 ## [0.3.0] - 2025-03-01
 
 ### Added
+
 - Implemented Magic Specialties classes
   - Chronomage
   - Graveturgy

@@ -1,6 +1,7 @@
 ﻿# Blood Bond Enhanced Tools - Progress Report
 
 ## Recently Completed
+- ✅ Fixed "Parameter Transfer Error" bug in the Text to Spell feature by properly initializing the specialty_instance variable
 - ✅ Added 'Write Spell' functionality to the Random Generator page, allowing users to save randomly generated spells to history
 - ✅ Implemented duplicate spell detection in Spell History functionality, providing users with a dialog to choose which version to keep when adding spells with identical incantations
 
@@ -60,10 +61,10 @@
 - ✅ Cleaned up directory structure and removed duplicate files
 
 ## What's Left To Do
-- ⬜ Implement advanced spell effects based on specialty
-- ⬜ Add user preferences for default magic specialty
-- ⬜ Add specialty-specific spell libraries
-- ⬜ Create documentation for the magic system features
+- ✅ Implement advanced spell effects based on specialty
+- ✅ Add user preferences for default magic specialty
+- ✅ Add specialty-specific spell libraries
+- ✅ Create documentation for the magic system features
 
 ## Implementation Plan
 - **Phase 1** (Completed): Core Magic System Mechanics
