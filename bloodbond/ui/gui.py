@@ -1405,6 +1405,7 @@ class SpellCreatorApp:
                 return
                 
             # Set the values in the main spell creator tab
+            # Set the values in the main spell creator tab
             self.tk_vars["effect"].set(effect)
             self.tk_vars["element"].set(element)
             
@@ -1418,6 +1419,16 @@ class SpellCreatorApp:
             
             # Convert duration from display format back to internal format for spell creation
             duration_key = self.duration_reverse_mapping.get(self.tk_vars["duration"].get(), duration)
+            
+            # Get magic specialty and create a specialty instance
+            magic_specialty = self.tk_vars["magic_specialty"].get()
+            power_level = self.tk_vars["power_level"].get()
+            
+            # Create specialty instance with appropriate level
+            specialty_class = self.specialty_classes.get(magic_specialty)
+            specialty_instance = None
+            if specialty_class:
+                specialty_instance = specialty_class(level=power_level)
             
             # Check if we should use the original description text
             if self.use_original_text_var.get() and original_text:
