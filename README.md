@@ -22,19 +22,12 @@ Blood Bond Enhanced Tools is designed to assist Game Masters and players in crea
 - **CLI Support**: Perform all operations through command-line for scripting and advanced users
 
 ## Installation
-
-### Via Pip (Recommended)
-
-```bash
-pip install bloodbond-enhanced-tools
-```
-
-### From Source
+Make sure you have Python installed 
 
 ```bash
 # Clone the repository
-git clone https://github.com/wkirby-212/bloodbond-enhanced-tools.git
-cd bloodbond-enhanced-tools
+git clone https://github.com/wkirby-212/Blood-Bond-Enhanced-Tools.git
+cd Blood-Bond-Enhanced-Tools
 
 # Install dependencies
 pip install -r requirements.txt
@@ -63,8 +56,6 @@ On first run, the application will generate necessary configuration files. You c
 Launch the application with:
 
 ```bash
-# If installed via pip
-bloodbond-gui
 
 # If installed from source
 python run_app.py
